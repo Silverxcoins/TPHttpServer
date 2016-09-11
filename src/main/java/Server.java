@@ -38,13 +38,4 @@ public class Server {
             bossGroup.shutdownGracefully();
         }
     }
-
-    private static class SocketChannelChannelInitializer extends ChannelInitializer<SocketChannel> {
-        @Override
-        public void initChannel(SocketChannel ch) throws Exception {
-            ch.pipeline().addLast(new StringDecoder());
-            ch.pipeline().addLast(new ServerInboundHandler());
-            ch.pipeline().addLast(new StringEncoder());
-        }
-    }
 }
