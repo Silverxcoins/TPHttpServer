@@ -1,20 +1,29 @@
 package handlers;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class ServerInboundHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        //((ByteBuf) msg).release();
         System.out.print(msg);
-        final String str = "<html><body><b>Server works</b></body></html>";
-        final ChannelFuture channelFuture = ctx.writeAndFlush(Unpooled.wrappedBuffer(str.getBytes()));
-        channelFuture.addListener(ChannelFutureListener.CLOSE);
+
+        Path path = Paths.get("/Users/Sasha/Desktop/projects/TPHttpServer/some_directory/index.html");
+        try {
+            byte[] data = Files.readAllBytes(path);
+            final ChannelFuture channelFuture = ctx.writeAndFlush(Unpooled.wrappedBuffer(data));
+            channelFuture.addListener(ChannelFutureListener.CLOSE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
