@@ -7,17 +7,26 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
 
 import java.nio.charset.Charset;
 
+@SuppressWarnings("SameParameterValue")
 public class Server {
-    private static final int PORT = 8081;
-    private static final int CPU_NUMBER = 2;
+    private final int port;
+    private final String directory;
+    private final String directoryIndex;
+    private final int cpuNumber;
+
+    public Server(int port, String directory, String directoryIndex, int cpuNumber) {
+        this.port = port;
+        this.directory = directory;
+        this.directoryIndex = directoryIndex;
+        this.cpuNumber = cpuNumber;
+    }
 
     public void run() throws InterruptedException {
         final EventLoopGroup bossGroup = new NioEventLoopGroup();
-        final EventLoopGroup workerGroup = new NioEventLoopGroup(CPU_NUMBER);
+        final EventLoopGroup workerGroup = new NioEventLoopGroup(cpuNumber);
         try {
             final ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
@@ -26,11 +35,11 @@ public class Server {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline().addLast(new StringDecoder(Charset.forName("UTF8")));
-                            ch.pipeline().addLast(new ServerInboundHandler());
+                            ch.pipeline().addLast(new ServerInboundHandler(directory, directoryIndex));
                         }
                     });
 
-            final ChannelFuture f = b.bind(PORT).sync();
+            final ChannelFuture f = b.bind(port).sync();
 
             f.channel().closeFuture().sync();
         } finally {
