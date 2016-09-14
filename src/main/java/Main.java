@@ -3,7 +3,7 @@ import server.Server;
 
 public class Main {
     private static final String SERVER_NAME = "HTTP Server";
-    private static final int PORT = 8080;
+    private static final int PORT = 80;
     private static final String DIRECTORY_INDEX = "index.html";
     private static String directory;
     private static int cpuNumber;

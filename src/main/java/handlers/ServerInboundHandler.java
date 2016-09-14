@@ -32,18 +32,22 @@ public class ServerInboundHandler extends ChannelInboundHandlerAdapter {
 
         final HttpResponse response;
         if (request.isValid()) {
-            String pathString = directory + request.getPath();
-            final File file = new File(pathString);
-
-            if (file.exists() && !file.isHidden()) {
-                if (file.isDirectory()) {
-                    pathString += '/' + directoryIndex;
+            String path = directory + request.getPath();
+            File file = new File(path);
+            if (file.isDirectory()) {
+                path += '/' + directoryIndex;
+                file = new File(path);
+                if (file.exists() && !file.isHidden()) {
+                    response = new HttpResponse(server, new Status(Status.OK), request.getMethod(), path);
+                } else {
+                    response = new HttpResponse(server, new Status(Status.FORBIDDEN));
                 }
-
-                final Path path = Paths.get(pathString);
-                response = new HttpResponse(server, new Status(Status.OK), request.getMethod(), path);
             } else {
-                response = new HttpResponse(server, new Status(Status.NOT_FOUND));
+                if (file.exists() && !file.isHidden()) {
+                    response = new HttpResponse(server, new Status(Status.OK), request.getMethod(), path);
+                } else {
+                    response = new HttpResponse(server, new Status(Status.NOT_FOUND));
+                }
             }
         } else {
             response = new HttpResponse(server, new Status(Status.BAD_REQUEST));

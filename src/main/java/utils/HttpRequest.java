@@ -12,8 +12,12 @@ public class HttpRequest {
     public HttpRequest(String request) {
         isValid = true;
         final String[] requestParts = request.split(" ", 3);
-        defineMethod(requestParts[0]);
-        definePath(requestParts[1]);
+        if (requestParts.length == 3) {
+            defineMethod(requestParts[0]);
+            definePath(requestParts[1]);
+        } else {
+            isValid = false;
+        }
     }
 
     private void defineMethod(String receivedMethod) {

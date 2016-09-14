@@ -5,6 +5,7 @@ import server.Server;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @SuppressWarnings("LocalVariableHidesMemberVariable")
 public class HttpResponse {
@@ -12,11 +13,13 @@ public class HttpResponse {
     private byte[] body;
     private String method = "";
 
-    public HttpResponse(Server server, Status status, String method, Path path) throws IOException {
+    public HttpResponse(Server server, Status status, String method, String pathString) throws IOException {
         this.method = method;
+
+        final Path path = Paths.get(pathString);
         this.body = Files.readAllBytes(path);
 
-        final String extension = path.toString().substring(path.toString().lastIndexOf('.') + 1);
+        final String extension = pathString.substring(pathString.lastIndexOf('.') + 1);
         final HttpHeaders headers = new HttpHeaders(
                 status,
                 server.getServerName(),
