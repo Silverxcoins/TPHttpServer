@@ -8,7 +8,6 @@ public class Main {
     private static String directory;
     private static int cpuNumber;
 
-
     public static void main(String[] args) throws InterruptedException {
         parseCommandLineArguments(args);
 
