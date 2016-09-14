@@ -1,3 +1,5 @@
+package server;
+
 import handlers.ServerInboundHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -10,14 +12,16 @@ import io.netty.handler.codec.string.StringDecoder;
 
 import java.nio.charset.Charset;
 
-@SuppressWarnings("SameParameterValue")
 public class Server {
+    private final String serverName;
     private final int port;
     private final String directory;
     private final String directoryIndex;
     private final int cpuNumber;
 
-    public Server(int port, String directory, String directoryIndex, int cpuNumber) {
+    @SuppressWarnings("SameParameterValue")
+    public Server(String serverName, int port, String directory, String directoryIndex, int cpuNumber) {
+        this.serverName = serverName;
         this.port = port;
         this.directory = directory;
         this.directoryIndex = directoryIndex;
@@ -35,7 +39,7 @@ public class Server {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline().addLast(new StringDecoder(Charset.forName("UTF8")));
-                            ch.pipeline().addLast(new ServerInboundHandler(directory, directoryIndex));
+                            ch.pipeline().addLast(new ServerInboundHandler(Server.this));
                         }
                     });
 
@@ -46,5 +50,17 @@ public class Server {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }
+    }
+
+    public String getServerName() {
+        return serverName;
+    }
+
+    public String getDirectory() {
+        return directory;
+    }
+
+    public String getDirectoryIndex() {
+        return directoryIndex;
     }
 }

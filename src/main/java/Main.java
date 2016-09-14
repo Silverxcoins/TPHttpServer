@@ -1,16 +1,18 @@
 import org.apache.commons.cli.*;
+import server.Server;
 
 public class Main {
+    private static final String SERVER_NAME = "HTTP Server";
     private static final int PORT = 8080;
     private static final String DIRECTORY_INDEX = "index.html";
     private static String directory;
     private static int cpuNumber;
 
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws InterruptedException {
         parseCommandLineArguments(args);
 
-        final Server server = new Server(PORT, directory, DIRECTORY_INDEX, cpuNumber);
+        final Server server = new Server(SERVER_NAME, PORT, directory, DIRECTORY_INDEX, cpuNumber);
 
         System.out.println("Starting server at port " + PORT);
         server.run();

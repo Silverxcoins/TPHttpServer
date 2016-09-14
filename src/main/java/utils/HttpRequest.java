@@ -3,9 +3,6 @@ package utils;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-/**
- * Created by Sasha on 13.09.16.
- */
 public class HttpRequest {
     private static final String[] POSSIBLE_METHODS = {"GET", "HEAD"};
     private boolean isValid;
@@ -19,25 +16,27 @@ public class HttpRequest {
         definePath(requestParts[1]);
     }
 
-    private void defineMethod(String method) {
+    private void defineMethod(String receivedMethod) {
         for (String possibleMethod : POSSIBLE_METHODS) {
-            if (method.equals(possibleMethod)) {
-                this.method = method;
+            if (receivedMethod.equals(possibleMethod)) {
+                method = receivedMethod;
             }
         }
 
-        if (this.method == null) {
+        if (method == null) {
             isValid = false;
         }
     }
 
-    private void definePath(String uri) {
+    private void definePath(String receivedUri) {
         try {
-            final URI parsedUri = new URI(uri);
-            path = parsedUri.getPath();
+            final URI uri = new URI(receivedUri);
+            if (receivedUri.endsWith(".") || receivedUri.contains("./") || receivedUri.contains("/.")) {
+                throw new URISyntaxException("","");
+            }
+            path = uri.getPath();
         } catch (URISyntaxException e) {
             isValid = false;
-            e.printStackTrace();
         }
     }
 
