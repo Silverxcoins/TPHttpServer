@@ -28,11 +28,9 @@ public class Main {
         cpuNumberOption.setRequired(true);
         options.addOption(cpuNumberOption);
 
-        final CommandLineParser parser = new PosixParser();
         final CommandLine cmd;
-
         try {
-            cmd = parser.parse(options, args);
+            cmd = new PosixParser().parse(options, args);
         } catch (ParseException e) {
             new HelpFormatter().printHelp(" ", options);
             System.exit(1);
