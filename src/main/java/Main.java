@@ -29,14 +29,12 @@ public class Main {
         options.addOption(cpuNumberOption);
 
         final CommandLineParser parser = new PosixParser();
-        final HelpFormatter formatter = new HelpFormatter();
         final CommandLine cmd;
 
         try {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
-            System.out.println(e.getMessage());
-            formatter.printHelp("", options);
+            new HelpFormatter().printHelp(" ", options);
             System.exit(1);
             return;
         }
